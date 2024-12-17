@@ -1,0 +1,1 @@
+// React.js entry point placeholder

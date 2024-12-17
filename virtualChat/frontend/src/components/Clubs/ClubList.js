@@ -1,0 +1,1 @@
+// Club list component placeholder

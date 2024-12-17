@@ -1,0 +1,1 @@
+// Institution list component placeholder

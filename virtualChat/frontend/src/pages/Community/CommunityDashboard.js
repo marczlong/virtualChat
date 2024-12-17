@@ -1,0 +1,1 @@
+// Community dashboard page placeholder
