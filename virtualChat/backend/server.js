@@ -1,6 +1,10 @@
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+
+const http = require('http'); 
+const { Server } = require("socket.io"); // Importa la clase Server
 
 dotenv.config(); // Cargar variables de entorno
 
@@ -22,6 +26,31 @@ mongoose
 const userRoutes = require('./routes/user');
 app.use('/api/users', userRoutes);
 
-// Iniciar el servidor
+// Crea el servidor HTTP
+const server = http.createServer(app);
+const socketIO = new Server(server, { 
+  cors: {
+    origin: "http://localhost:3002", 
+    methods: ["GET", "POST"]
+  }
+});
+
+
+// Maneja la conexión de Socket.IO
+socketIO.on('connection', (socket) => { // Cambiado a 'socketIO'
+  console.log('Un usuario se ha conectado');
+
+  socket.on('sendMessage', (message) => {
+    // Guardar el mensaje en la base de datos (implementar)
+    socketIO.emit('newMessage', message); // Cambiado a 'socketIO'
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Un usuario se ha desconectado');
+  });
+});
+
+
+// Iniciar el servidor HTTP (en lugar de app.listen)
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+server.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
